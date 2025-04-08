@@ -1,0 +1,16 @@
+
+python-telegram-bot[job-queue]==20.7
+python-dotenv==1.0.0
+asyncio==3.4.3
+aiohttp==3.9.1
+telegram
+google-generativeai
+asyncio
+python-telegram-bot
+typing
+asyncio
+python-telegram-bot
+asyncio
+python-telegram-bot
+asyncio
+python-telegram-bot[job-queue]

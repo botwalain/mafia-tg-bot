@@ -1,2 +1,41 @@
-# BotBerlin-Mafionnad
- 🌌 Berlin-Mafionnad mafia game bot telegram open source inspired Truemafia 
+
+# MafiosoNnad Bot v1.0.0
+Created by @berlinnad
+
+A feature-rich Telegram Mafia game bot with AI players, room management, and various game modes.
+
+## Features
+- 🎮 Multiple game modes (Normal, Random)
+- 🤖 AI bot players with unique behaviors
+- 👥 Room management system
+- 🎭 Role system (Mafia, Detective, Doctor, etc)
+- 📊 Player statistics tracking
+- 🛍️ Shop system with items
+- ⏰ Game timer management
+
+## Known Issues/Bugs
+- Room creation occasionally throws 'is_admin' keyword error
+- Timer flood control in active games
+- Button response delays in large groups
+
+## Setup Instructions
+1. Install required packages: `pip install -r requirements.txt`
+2. Edit `config.py` and add your Telegram bot token
+3. Run `python main.py` to start the bot
+
+## Commands
+- /start - Start bot and show main menu
+- /help - Show help message
+- /room - Create new game room
+- /extend - Extend room timer
+- /stats - View player statistics
+- /shop - Open shop menu
+
+## Security
+- Bot includes 808002 encryption key
+- Configuration is separate from main code
+- Token management via config.py
+
+## Credits
+Created and maintained by @berlinnad
+Copyright (c) 2024 Berlinnad. All rights reserved.

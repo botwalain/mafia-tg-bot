@@ -1,0 +1,99 @@
+{
+  "phase": "idle",
+  "players": [
+    {
+      "id": 5136750253,
+      "name": "cigarette's",
+      "is_bot": false
+    },
+    {
+      "id": -1000,
+      "name": "Bot_1",
+      "is_bot": true
+    },
+    {
+      "id": -1001,
+      "name": "Bot_2",
+      "is_bot": true
+    },
+    {
+      "id": -1002,
+      "name": "Bot_3",
+      "is_bot": true
+    }
+  ],
+  "alive_players": [
+    {
+      "id": 5136750253,
+      "name": "cigarette's",
+      "is_bot": false
+    },
+    {
+      "id": -1000,
+      "name": "Bot_1",
+      "is_bot": true
+    },
+    {
+      "id": -1002,
+      "name": "Bot_3",
+      "is_bot": true
+    }
+  ],
+  "roles": {
+    "5136750253": "Mafia",
+    "1855323960": "Pengacara"
+  },
+  "votes": {},
+  "night_actions": {
+    "5136750253": -1001
+  },
+  "waiting_for_roles": [],
+  "current_day": 1,
+  "group_id": -1002565518676,
+  "vote_time": 60,
+  "game_log": [],
+  "player_money": {},
+  "player_inventory": {},
+  "achievements": {},
+  "afk_counter": {},
+  "shop": {
+    "fake_id": {
+      "price": 1500,
+      "description": "Sembunyikan identitasmu dari Detektif"
+    },
+    "protection": {
+      "price": 2000,
+      "description": "Lindungi diri dari serangan malam"
+    },
+    "double_vote": {
+      "price": 3000,
+      "description": "Vote bernilai 2x"
+    },
+    "revival": {
+      "price": 5000,
+      "description": "Bangkit kembali setelah mati"
+    },
+    "role_swap": {
+      "price": 4000,
+      "description": "Tukar peran dengan pemain lain"
+    }
+  },
+  "mode": "Mode Normal",
+  "night_gif": "https://example.com/night.gif",
+  "day_gif": "https://example.com/day.gif",
+  "vote_gif": "https://example.com/vote.gif",
+  "waiting_gif": "https://example.com/waiting.gif",
+  "promo_image": "https://example.com/promo.jpg",
+  "protected_players": [],
+  "mafia_chat": {
+    "5136750253": true
+  },
+  "used_actions": [
+    5136750253
+  ],
+  "action_notifications": [],
+  "night_summary": [],
+  "action_messages": {
+    "5136750253": 190
+  }
+}
