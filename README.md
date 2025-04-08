@@ -12,7 +12,7 @@ A feature-rich Telegram Mafia game bot with AI players, room management, and var
 - 📊 Player statistics tracking
 - 🛍️ Shop system with items
 - ⏰ Game timer management
-
+- 👆 The Bot mostly uses buttons
 ## Known Issues/Bugs
 - Room creation occasionally throws 'is_admin' keyword error
 - Timer flood control in active games
@@ -25,10 +25,7 @@ A feature-rich Telegram Mafia game bot with AI players, room management, and var
 
 ## Commands
 - /start - Start bot and show main menu
-- /help - Show help message
-- /room - Create new game room
 - /extend - Extend room timer
-- /stats - View player statistics
 - /shop - Open shop menu
 
 ## Security
