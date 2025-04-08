@@ -20,7 +20,7 @@ A feature-rich Telegram Mafia game bot with AI players, room management, and var
 
 ## Setup Instructions
 1. Install required packages: `pip install -r requirements.txt`
-2. Edit `config.py` and add your Telegram bot token
+2. Edit `config.py` and add your Telegram bot token and your ai api
 3. Run `python main.py` to start the bot
 
 ## Commands
