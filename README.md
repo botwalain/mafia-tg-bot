@@ -32,7 +32,6 @@ A feature-rich Telegram Mafia game bot with AI players, room management, and var
 - /shop - Open shop menu
 
 ## Security
-- Bot includes 808002 encryption key
 - Configuration is separate from main code
 - Token management via config.py
 
