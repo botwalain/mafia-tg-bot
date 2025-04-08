@@ -6,8 +6,8 @@ To use this bot:
 2. No API key needed for basic functionality
 """
 
-# Encryption key (808002)
-ENCRYPTION_KEY = "808002"
+# Encryption key 
+ENCRYPTION_KEY = "909090"
 
 # Bot token (replace with your token)
 BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
