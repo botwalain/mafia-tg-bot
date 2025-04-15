@@ -22,12 +22,12 @@ async def send_role_pm(player_id, role, context, room_id):
             if not p.get("is_bot", False):
                 buttons.append(InlineKeyboardButton(f"🔪 Kill {p['name']}", callback_data=f"kill_{room_id}_{p['id']}"))
         keyboard = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
-    elif role == "Detektif":
+    elif role == "Detective":
         for p in player_list:
             if not p.get("is_bot", False):
                 buttons.append(InlineKeyboardButton(f"🔍 Check {p['name']}", callback_data=f"investigate_{room_id}_{p['id']}"))
         keyboard = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
-    elif role == "Dokter":
+    elif role == "Docter":
         for p in player_list:
             if not p.get("is_bot", False):
                 buttons.append(InlineKeyboardButton(f"💉 Heal {p['name']}", callback_data=f"heal_{room_id}_{p['id']}"))
@@ -41,7 +41,7 @@ async def send_role_pm(player_id, role, context, room_id):
     reply_markup = InlineKeyboardMarkup(keyboard)
     await context.bot.send_message(
         chat_id=player_id,
-        text=f"🎭 Peran kamu: {role}\n\n📜 Deskripsi:\n{role_text}",
+        text=f"🎭 Your role: {role}\n\n📜 Description:\n{role_text}",
         reply_markup=reply_markup
     )
 
