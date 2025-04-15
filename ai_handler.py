@@ -42,7 +42,7 @@ class AIHandler:
         }
         
         # Initialize Gemini
-        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+        genai.configure(api_key=os.getenv("AIzaSyA2fmlKKeNqe5GkVW0caA8IzkLg-c0TCFA"))
         self.model = genai.GenerativeModel('gemini-pro')
 
     def get_night_action(self, bot: Dict, players: List[Dict]) -> Dict:
