@@ -27,7 +27,7 @@ async def denyroom(update: Update, context: ContextTypes.DEFAULT_TYPE):
     room = get_room_by_player(user_id)
 
     if not room:
-        await update.message.reply_text("❌ Anda tidak berada dalam room!")
+        await update.message.reply_text("❌ You are not in the room!")
         return
 
     # Remove player and check result
@@ -36,7 +36,7 @@ async def denyroom(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if was_cancelled:
         await context.bot.send_message(
             chat_id=room.chat_id,
-            text=f"🚫 Room dibatalkan karena @{username} (host) keluar."
+            text=f"🚫 Room cancelled because @{username} (host) left."
         )
         if room.id in active_rooms:
             del active_rooms[room.id]
@@ -44,7 +44,7 @@ async def denyroom(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Send leave notification
         await context.bot.send_message(
             chat_id=room.chat_id,
-            text=f"👋 @{username} telah keluar dari room."
+            text=f"👋 @{username} has left the room."
         )
 
         # Update room message if still joining
@@ -61,15 +61,15 @@ async def denyroom(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await context.bot.edit_message_text(
                     chat_id=room.chat_id,
                     message_id=room.message_id,
-                    text=f"📢 Room terbuka\n\n"
-                         f"👥 Total Pemain: {len(room.players)}\n"
+                    text=f"📢 Room is open.\n\n"
+                         f"👥 Total Players: {len(room.players)}\n"
                          f"{chr(10).join(player_list)}",
                     reply_markup=keyboard
                 )
             except Exception as e:
                 print(f"Error updating room message: {e}")
 
-    await update.message.reply_text("✅ Anda telah keluar dari room.")
+    await update.message.reply_text("✅ You have left the room.")
 
 command_handler.register_command("denyroom", denyroom)
 
@@ -80,19 +80,19 @@ async def extend(update: Update, context: ContextTypes.DEFAULT_TYPE):
     room = get_room_by_player(user_id)
 
     if not room:
-        await update.message.reply_text("❌ Anda tidak berada dalam room!")
+        await update.message.reply_text("❌ You are not in the room!")
         return
 
     if room.creator_id != user_id:
-        await update.message.reply_text("❌ Hanya pembuat room yang dapat menggunakan /extend!")
+        await update.message.reply_text("❌ Only the room creator can use /extend!")
         return
 
     if not room:
-        await update.message.reply_text("❌ Anda tidak berada dalam room!")
+        await update.message.reply_text("❌ You are not in the room!")
         return
 
     if room.creator_id != user_id:
-        await update.message.reply_text("❌ Hanya host yang dapat menggunakan /extend!")
+        await update.message.reply_text("❌ Only the host can use /extend!")
         return
 
     # Add 30 seconds
@@ -101,29 +101,29 @@ async def extend(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Send notification
     await context.bot.send_message(
         chat_id=room.chat_id,
-        text=f"⏰ @{username} menambah waktu pendaftaran +30 detik!"
+        text=f"⏰ @{username} added +30 seconds to the registration time!"
     )
 
     if not room:
-        await update.message.reply_text("❌ Anda tidak berada dalam room!")
+        await update.message.reply_text("❌ You are not in the room!")
         return
 
     if not room.is_joining:
-        await update.message.reply_text("❌ Room sudah dimulai!")
+        await update.message.reply_text("❌ The room has already started!")
         return
 
     if room.creator_id != user_id:
-        await update.message.reply_text("❌ Hanya host yang dapat menggunakan /extend!")
+        await update.message.reply_text("❌ Only the host can use /extend!")
         return
 
     if room.creator_id != user_id:
-        await update.message.reply_text("❌ Hanya pembuat room yang dapat menggunakan /extend!")
+        await update.message.reply_text("❌ Only the room creator can use /extend!")
         return
 
     if time.time() - room.start_time > room.room_timeout:
         if room.id in active_rooms:
             del active_rooms[room.id]
-            await update.message.reply_text("🕐 Room telah berakhir karena melebihi batas waktu 2 jam")
+            await update.message.reply_text("🕐 The room has ended due to exceeding the 2-hour time limit.")
         return
 
     current_time = time.time()
@@ -131,12 +131,12 @@ async def extend(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if current_time - last_extend < 15:
         remaining = int(15 - (current_time - last_extend))
-        await update.message.reply_text(f"⏳ Tunggu {remaining} detik untuk extend lagi!")
+        await update.message.reply_text(f"⏳ Wait {remaining} seconds to extend again!")
         return
 
     room.join_timer += 30
     extend_cooldowns[room.id] = current_time
-    await update.message.reply_text("⌛ Waktu pendaftaran ditambah 30 detik!")
+    await update.message.reply_text("⌛ Registration time extended by 30 seconds!")
 
 async def startgame(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Command handler for /startgame - only usable by room creator"""
@@ -145,21 +145,21 @@ async def startgame(update: Update, context: ContextTypes.DEFAULT_TYPE):
         room = get_room_by_player(user_id)
 
         if not room:
-            await update.message.reply_text("❌ Anda tidak berada dalam room!")
+            await update.message.reply_text("❌ You are not in the room!")
             return
 
         if room.creator_id != user_id:
-            await update.message.reply_text("❌ Hanya pembuat room yang dapat memulai permainan!")
+            await update.message.reply_text("❌ Only the room creator can start the game!")
             return
 
         if not room.is_joining:
-            await update.message.reply_text("❌ Room sudah dimulai!")
+            await update.message.reply_text("❌ The room has already started!")
             return
 
         # Count both real players and bots for minimum requirement
         total_players = len(room.players)
         if total_players < 4:
-            await update.message.reply_text(f"❌ Minimal butuh 4 pemain! (Sekarang: {total_players})")
+            await update.message.reply_text(f"❌ Minimum of 4 players required! (Currently: {total_players})")
             return
 
         # Start the game
@@ -167,7 +167,7 @@ async def startgame(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     except Exception as e:
         print(f"Error in startgame command: {e}")
-        await update.message.reply_text("❌ Terjadi kesalahan saat memulai permainan!")
+        await update.message.reply_text("❌ An error occurred while starting the game!")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /start command"""
@@ -178,15 +178,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # PM Menu
         keyboard = [
             [InlineKeyboardButton("🎮 Join Game", callback_data="join_game")],
-            [InlineKeyboardButton("🛍️ Toko", callback_data="shop")],
-            [InlineKeyboardButton("❓ Bantuan", callback_data="help")],
+            [InlineKeyboardButton("🛍️ Shop", callback_data="shop")],
+            [InlineKeyboardButton("❓ Help", callback_data="help")],
             [InlineKeyboardButton("👥 Roles", callback_data="roles")]
         ]
     else:
         # Group Menu  
         keyboard = [
-            [InlineKeyboardButton("🎮 Buat Room", callback_data="create_room")],
-            [InlineKeyboardButton("❓ Bantuan", callback_data="help")],
+            [InlineKeyboardButton("🎮 Create Room", callback_data="create_room")],
+            [InlineKeyboardButton("❓ Help", callback_data="help")],
             [InlineKeyboardButton("🔍 Rules", callback_data="rules")]
         ]
 
@@ -197,13 +197,13 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /help command"""
     help_text = (
         "🎮 Commands:\n"
-        "/start - Mulai bot\n"
-        "/help - Bantuan\n" 
-        "/rules - Aturan main\n"
-        "/roles - List peran\n"
-        "/quitroom - Keluar room\n"
-        "/extend - Tambah waktu (+30s)\n\n"
-        "ℹ️ Info lebih lanjut gunakan tombol dibawah"
+        "/start - Start the bot\n"
+        "/help - Help\n" 
+        "/rules - Game rules\n"
+        "/roles - List of roles\n"
+        "/quitroom - Leave the room\n"
+        "/extend - Add time (+30s)\n\n"
+        "ℹ️ For more information, use the button below"
     )
     keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -217,10 +217,10 @@ async def handle_setup_timeout(room, message):
             if room.id in active_rooms:
                 del active_rooms[room.id]
             await message.edit_text(
-                "⏰ Waktu pembuatan room habis!\n"
-                "Silakan buat room baru.",
+                "⏰ Room creation time has expired!\n"
+                "Please create a new room.",
                 reply_markup=InlineKeyboardMarkup([[
-                    InlineKeyboardButton("⬅️ Kembali ke Menu", callback_data="main_menu")
+                    InlineKeyboardButton("⬅️ Back to Menu", callback_data="main_menu")
                 ]])
             )
     except Exception as e:
@@ -231,9 +231,9 @@ async def quit_room(update: Update, context: ContextTypes.DEFAULT_TYPE):
     room = get_room_by_player(user_id)
     if room:
         room.remove_player(user_id)
-        await update.message.reply_text("Anda telah keluar dari room.")
+        await update.message.reply_text("You have left the room.")
     else:
-        await update.message.reply_text("Anda tidak berada dalam room.")
+        await update.message.reply_text("You are not in a room.")
 
 async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle button callbacks"""
@@ -254,17 +254,17 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             if query.message.chat.type == "private":
                 keyboard = [
-                    [InlineKeyboardButton("🎮 Buat Room", callback_data="create_room")],
-                    [InlineKeyboardButton("👥 Lihat Role", callback_data="roles")],
-                    [InlineKeyboardButton("❓ Bantuan", callback_data="help")],
-                    [InlineKeyboardButton("🛍️ Toko", callback_data="shop")],
+                    [InlineKeyboardButton("🎮 Create Room", callback_data="create_room")],
+                    [InlineKeyboardButton("👥 View Roles", callback_data="roles")],
+                    [InlineKeyboardButton("❓ Help", callback_data="help")],
+                    [InlineKeyboardButton("🛍️ Shop", callback_data="shop")],
                     [InlineKeyboardButton("📊 Stats", callback_data="stats")]
                 ]
             else:
                 keyboard = [
-                    [InlineKeyboardButton("🎮 Buat Room", callback_data="create_room")],
-                    [InlineKeyboardButton("👥 Lihat Role", callback_data="roles")],
-                    [InlineKeyboardButton("❓ Bantuan", callback_data="help")]
+                    [InlineKeyboardButton("🎮 Create Room", callback_data="create_room")],
+                    [InlineKeyboardButton("👥 View Roles", callback_data="roles")],
+                    [InlineKeyboardButton("❓ Help", callback_data="help")]
                 ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             try:
@@ -274,7 +274,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         elif query.data == "create_room":
             if query.message.chat.type == "private":
-                await query.answer("❌ Room hanya bisa dibuat di grup!", show_alert=True)
+                await query.answer("❌ Rooms can only be created in groups!", show_alert=True)
                 return
 
             # Cleanup existing rooms
@@ -283,26 +283,26 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # Create new room
             room = create_room(query.from_user.id, query.message.chat.id)
             if not room:
-                await query.answer("❌ Sudah ada room aktif di grup ini!", show_alert=True)
+                await query.answer("❌ There is already an active room in this group!", show_alert=True)
                 return
 
             # Add creator as player
             room.add_player(query.from_user.id, query.from_user.username, is_admin=True)
             if not room:
-                await query.answer("❌ Sudah ada room aktif di grup ini!", show_alert=True)
+                await query.answer("❌ There is already an active room in this group!", show_alert=True)
                 return
 
             keyboard = [
-                [InlineKeyboardButton("👥 Mode Normal", callback_data="mode_normal"),
-                 InlineKeyboardButton("🎲 Mode Random", callback_data="mode_random")],
-                [InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")]
+                [InlineKeyboardButton("👥 Normal Mode", callback_data="mode_normal"),
+                 InlineKeyboardButton("🎲 Random Mode", callback_data="mode_random")],
+                [InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.reply_text(
-                f"⚙️ Pengaturan Room:\n"
-                f"🔢 ID Room: {room.id}\n"
+                f"⚙️ Room Settings:\n"
+                f"🔢 Room ID: {room.id}\n"
                 f"👑 Admin: @{query.from_user.username}\n\n"
-                f"Pilih mode permainan:",
+                f"Select the game mode:",
                 reply_markup=reply_markup
             )
 
@@ -313,19 +313,19 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             room = get_room(room_id)
             if not room or query.from_user.id != room.creator_id:
-                await query.answer("❌ Akses ditolak!", show_alert=True)
+                await query.answer("❌ Access denied!", show_alert=True)
                 return
 
             keyboard = [
-                [InlineKeyboardButton("✅ Ya (3 Bot)", callback_data=f"setup_room_{room_id}_{mode}_3"),
-                 InlineKeyboardButton("❌ Tidak", callback_data=f"setup_room_{room_id}_{mode}_0")],
-                [InlineKeyboardButton("⬅️ Kembali", callback_data="create_room")]
+                [InlineKeyboardButton("✅ Yes (3 Bots)", callback_data=f"setup_room_{room_id}_{mode}_3"),
+                 InlineKeyboardButton("❌ No", callback_data=f"setup_room_{room_id}_{mode}_0")],
+                [InlineKeyboardButton("⬅️ Back", callback_data="create_room")]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.edit_text(
-                f"🤖 Tambahkan bot ke room?\n"
+                f"🤖 Add bots to the room?\n"
                 f"Mode: {mode.title()}\n"
-                f"🔢 ID Room: {room_id}",
+                f"🔢 Room ID: {room_id}",
                 reply_markup=reply_markup
             )
 
@@ -334,13 +334,13 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             room = create_room(query.from_user.id, mode, 0)
             keyboard = await get_room_keyboard(room, query.from_user.id)
             await query.message.edit_text(
-                f"✨ Room berhasil dibuat!\n\n"
+                f"✨ Room successfully created!\n\n"
                 f"🎮 Mode: {mode.title()}\n"
-                f"🤖 Bot: 0/3\n"
-                f"🔢 ID Room: {room.id}\n"
-                f"👥 Pemain: {len(room.players)}/12\n\n"
-                f"⏳ Menunggu pemain...\n"
-                f"Room akan dimulai dalam 60 detik!",
+                f"🤖 Bots: 0/3\n"
+                f"🔢 Room ID: {room.id}\n"
+                f"👥 Players: {len(room.players)}/12\n\n"
+                f"⏳ Waiting for players...\n"
+                f"The room will start in 60 seconds!",
                 reply_markup=keyboard
             )
             await handle_room_timer(room, query.message, context)
@@ -349,12 +349,12 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             mode = query.data.split("_")[-1]
             try:
                 if query.message.chat.type == "private":
-                    await query.answer("❌ Room hanya bisa dibuat di grup!", show_alert=True)
+                    await query.answer("❌ Rooms can only be created in groups!", show_alert=True)
                     return
 
                 room = create_room(query.from_user.id, query.message.chat_id, mode, 3)
                 if not room:
-                    await query.answer("❌ Sudah ada room aktif di grup ini!", show_alert=True)
+                    await query.answer("❌ There's already an active room in this group!", show_alert=True)
                     return
                 keyboard = []
 
@@ -363,12 +363,12 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 if is_creator:
                     if len(room.players) >= 4:
-                        keyboard.append([InlineKeyboardButton("▶️ Mulai Game", callback_data=f"start_game_{room.id}")])
-                    keyboard.append([InlineKeyboardButton("🚫 Batalkan Room", callback_data=f"cancel_room_{room.id}")])
+                        keyboard.append([InlineKeyboardButton("▶️ Start Game", callback_data=f"start_game_{room.id}")])
+                    keyboard.append([InlineKeyboardButton("🚫 Cancel Room", callback_data=f"cancel_room_{room.id}")])
                 elif not is_player:
                     keyboard.append([InlineKeyboardButton("➕ Join Room", callback_data=f"join_room_{room.id}")])
                 else:
-                    keyboard.append([InlineKeyboardButton("❌ Keluar", callback_data=f"leave_room_{room.id}")])
+                    keyboard.append([InlineKeyboardButton("❌ Leave", callback_data=f"leave_room_{room.id}")])
 
                 reply_markup = InlineKeyboardMarkup(keyboard)
                 player_list = []
@@ -380,20 +380,20 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 mentions = room.get_player_mentions()
                 message = await query.message.edit_text(
-                    f"✨ Room berhasil dibuat!\n\n"
+                    f"✨ Room successfully created!\n\n"
                     f"🎮 Mode: {mode.title()}\n"
-                    f"🤖 AI Players: Ya (3 Bot)\n"
-                    f"🔢 ID Room: {room.id}\n"
-                    f"👥 Total Pemain: {len(room.players)}\n"
+                    f"🤖 AI Players: Yes (3 Bots)\n"
+                    f"🔢 Room ID: {room.id}\n"
+                    f"👥 Total Players: {len(room.players)}\n"
                     f"{chr(10).join(mentions)}\n\n"
-                    f"⏳ {60} detik tersisa\n"
-                    f"Ketik /extend untuk menambah waktu 30 detik",
+                    f"⏳ {60} seconds remaining\n"
+                    f"Type /extend to add 30 more seconds",
                     reply_markup=reply_markup
                 )
                 await handle_room_timer(room, message, context)
             except Exception as e:
                 print(f"Error creating room with bots: {e}")
-                await query.answer("❌ Gagal membuat room, coba lagi", show_alert=True)
+                await query.answer("❌ Failed to create the room, please try again", show_alert=True)
             await handle_room_timer(room, message, context)
 
         elif query.data.startswith("select_bots_"):
@@ -417,13 +417,13 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             player_list = room.get_player_mentions()
 
             await query.message.edit_text(
-                f"✨ Room berhasil dibuat!\n\n"
+                f"✨ Room successfully created!\n\n"
                 f"🎮 Mode: {setup['mode'].title()}\n"
-                f"🔢 ID Room: {room.id}\n"
-                f"👥 Pemain ({len(room.players)}):\n"
+                f"🔢 Room ID: {room.id}\n"
+                f"👥 Players ({len(room.players)}):\n"
                 f"{chr(10).join(player_list)}\n\n"
-                f"⏳ Menunggu pemain...\n"
-                f"Room akan dimulai dalam 60 detik!",
+                f"⏳ Waiting for players...\n"
+                f"The room will start in 60 seconds!",
                 reply_markup=keyboard,
                 parse_mode='HTML'
             )
@@ -444,9 +444,9 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 f"✨ Room settings:\n\n"
                 f"🎮 Mode: {room.mode.title()}\n"
                 f"🤖 Bot: {room.bot_count}/3\n"
-                f"🔢 ID Room: {room.id}\n"
-                f"👥 Pemain: {len(room.players)}/12\n\n"
-                f"⏳ Menunggu pemain...",
+                f"🔢 Room ID: {room.id}\n"
+                f"👥 Players: {len(room.players)}/12\n\n"
+                f"⏳ Waiting for players...",
                 reply_markup=keyboard
             )
 
@@ -455,20 +455,20 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             room = get_room(room_id)
 
             if not room:
-                await query.answer("❌ Room tidak ditemukan!", show_alert=True)
+                await query.answer("❌ Room not found!", show_alert=True)
                 return
 
             if room.creator_id != query.from_user.id:
-                await query.answer("❌ Hanya pembuat room yang dapat membatalkan room!", show_alert=True)
+                await query.answer("❌ Only the room creator can cancel the room!", show_alert=True)
                 return
 
             if room.id in active_rooms:
                 del active_rooms[room.id]
                 await query.message.edit_text(
-                    "🚫 Room dibatalkan.\n"
-                    "Silakan buat room baru.",
+                    "🚫 Room canceled.\n"
+                    "Please create a new room.",
                     reply_markup=InlineKeyboardMarkup([[
-                        InlineKeyboardButton("⬅️ Kembali ke Menu", callback_data="main_menu")
+                        InlineKeyboardButton("⬅️ Back to Menu", callback_data="main_menu")
                     ]])
                 )
 
@@ -481,12 +481,12 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 if not room:
                     room = create_room(query.from_user.id, query.message.chat.id)
                     if not room:
-                        await query.answer("❌ Sudah ada room aktif di grup ini!", show_alert=True)
+                        await query.answer("❌ There's already an active room in this group!", show_alert=True)
                         return
 
                 # Verify creator permissions
                 if room.creator_id != query.from_user.id:
-                    await query.answer("❌ Hanya pembuat room yang bisa mengatur mode!", show_alert=True)
+                    await query.answer("❌ Only the room creator can set the mode!", show_alert=True)
                     return
 
                 # Set mode and update keyboard
@@ -495,15 +495,15 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 # Create keyboard for bot selection (yes/no)
                 keyboard = [
-                    [InlineKeyboardButton("✅ Ya (3 Bot)", callback_data=f"setup_bot_{room.id}_{mode}_3"),
-                     InlineKeyboardButton("❌ Tidak", callback_data=f"setup_bot_{room.id}_{mode}_0")],
-                    [InlineKeyboardButton("⬅️ Kembali", callback_data="create_room")]
+                    [InlineKeyboardButton("✅ Yes (3 Bots)", callback_data=f"setup_bot_{room.id}_{mode}_3"),
+                     InlineKeyboardButton("❌ No", callback_data=f"setup_bot_{room.id}_{mode}_0")],
+                    [InlineKeyboardButton("⬅️ Back", callback_data="create_room")]
                 ]
                 reply_markup = InlineKeyboardMarkup(keyboard)
                 await query.message.edit_text(
-                    f"🤖 Tambahkan AI Players ke room?\n\n"
+                    f"🤖 Add AI Players to the room?\n\n"
                     f"🎮 Mode: {mode.title()}\n"
-                    f"🔢 ID Room: {room.id}",
+                    f"🔢 Room ID: {room.id}",
                     reply_markup=reply_markup
                 )
 
@@ -511,7 +511,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 asyncio.create_task(handle_setup_timeout(room, query.message))
             except Exception as e:
                 print(f"Error in mode selection: {e}")
-                await query.answer("❌ Terjadi kesalahan, coba lagi", show_alert=True)
+                await query.answer("❌ An error occurred, please try again", show_alert=True)
 
         elif query.data.startswith("setup_bot_"):
             try:
@@ -522,11 +522,11 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 room = get_room(room_id)
                 if not room:
-                    await query.answer("❌ Room tidak ditemukan!", show_alert=True)
+                    await query.answer("❌ Room not found!", show_alert=True)
                     return
 
                 if room.creator_id != query.from_user.id:
-                    await query.answer("❌ Hanya pembuat room yang bisa mengatur bot!", show_alert=True)
+                    await query.answer("❌ Only the room creator can set up the bots!", show_alert=True)
                     return
 
                 # Setup room with chosen mode and bots
@@ -552,13 +552,13 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                         player_mentions.append(f"@{p['name']}")
 
                 await query.message.edit_text(
-                    f"✨ Room berhasil dibuat!\n\n"
+                    f"✨ Room successfully created!\n\n"
                     f"🎮 Mode: {mode.title()}\n"
-                    f"🔢 ID Room: {room.id}\n"
-                    f"👥 Pemain ({len(room.players)}):\n"
+                    f"🔢 Room ID: {room.id}\n"
+                    f"👥 Players ({len(room.players)}):\n"
                     f"{chr(10).join(player_mentions)}\n\n"
-                    f"⏳ Menunggu pemain...\n"
-                    f"Room akan dimulai dalam 60 detik!",
+                    f"⏳ Waiting for players...\n"
+                    f"The room will start in 60 seconds!",
                     reply_markup=keyboard
                 )
 
@@ -566,7 +566,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 asyncio.create_task(handle_room_timer(room, query.message, context))
             except Exception as e:
                 print(f"Error in setup_bot: {e}")
-                await query.answer("❌ Terjadi kesalahan, coba lagi", show_alert=True)
+                await query.answer("❌ An error occurred, please try again", show_alert=True)
 
         elif query.data.startswith("create_room_no_bots_"):
             mode = query.data.split("_")[-1]
@@ -574,36 +574,36 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 room = create_room(query.from_user.id, mode, 0)
                 keyboard = await get_room_keyboard(room, query.from_user.id)
                 message = await query.message.edit_text(
-                    f"📢 Pendaftaran dibuka\n\n"
+                    f"📢 Registration opened\n\n"
                     f"🎮 Mode: {mode.title()}\n"
-                    f"🤖 AI Players: Tidak\n"
-                    f"🔢 ID Room: {room.id}\n"
-                    f"Terdaftar:: {', '.join([p['name'] for p in room.players])}\n\n"
-                    f"⏳ {60} detik tersisa hingga akhir pendaftaran",
+                    f"🤖 AI Players: No\n"
+                    f"🔢 Room ID: {room.id}\n"
+                    f"Registered: {', '.join([p['name'] for p in room.players])}\n\n"
+                    f"⏳ {60} seconds left until registration ends",
                     reply_markup=keyboard
                 )
                 asyncio.create_task(handle_room_timer(room, message, context))
             except Exception as e:
                 print(f"Error creating room: {e}")
-                await query.answer("❌ Gagal membuat room, coba lagi", show_alert=True)
+                await query.answer("❌ Failed to create room, please try again", show_alert=True)
 
         elif query.data.startswith("create_room_with_bots_"):
             mode = query.data.split("_")[-1]
             try:
                 if query.message.chat.type == "private":
-                    await query.answer("❌ Room hanya bisa dibuat di grup!", show_alert=True)
+                    await query.answer("❌ Rooms can only be created in groups!", show_alert=True)
                     return
 
                 room = create_room(query.from_user.id, query.message.chat_id, mode, 3)
                 if not room:
-                    await query.answer("❌ Sudah ada room aktif di grup ini!", show_alert=True)
+                    await query.answer("❌ There is already an active room in this group!", show_alert=True)
                     return
                 keyboard = []
 
                 is_creator = query.from_user.id == room.creator_id
                 if is_creator:
-                    keyboard.append([InlineKeyboardButton("▶️ Mulai Game", callback_data=f"start_game_{room.id}")])
-                    keyboard.append([InlineKeyboardButton("🚫 Batalkan Room", callback_data=f"cancel_room_{room.id}")])
+                    keyboard.append([InlineKeyboardButton("▶️ Start Game", callback_data=f"start_game_{room.id}")])
+                    keyboard.append([InlineKeyboardButton("🚫 Cancel Room", callback_data=f"cancel_room_{room.id}")])
                 else:
                     keyboard.append([InlineKeyboardButton("➕ Join Room", callback_data=f"join_room_{room.id}")])
 
@@ -617,20 +617,20 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 mentions = room.get_player_mentions()
                 message = await query.message.edit_text(
-                    f"✨ Room berhasil dibuat!\n\n"
+                    f"✨ Room successfully created!\n\n"
                     f"🎮 Mode: {mode.title()}\n"
-                    f"🤖 AI Players: Ya (3 Bot)\n"
-                    f"🔢 ID Room: {room.id}\n"
-                    f"👥 Total Pemain: {len(room.players)}\n"
+                    f"🤖 AI Players: Yes (3 Bots)\n"
+                    f"🔢 Room ID: {room.id}\n"
+                    f"👥 Total Players: {len(room.players)}\n"
                     f"{chr(10).join(mentions)}\n\n"
-                    f"⏳ {60} detik tersisa\n"
-                    f"Ketik /extend untuk menambah waktu 30 detik",
+                    f"⏳ {60} seconds remaining\n"
+                    f"Type /extend to add 30 more seconds",
                     reply_markup=reply_markup
                 )
                 asyncio.create_task(handle_room_timer(room, message, context))
             except Exception as e:
                 print(f"Error creating room with bots: {e}")
-                await query.answer("❌ Gagal membuat room, coba lagi", show_alert=True)
+                await query.answer("❌ Failed to create room, try again", show_alert=True)
 
         elif query.data == "add_bot":
             room = get_room_by_player(query.from_user.id)
@@ -639,15 +639,15 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 room.setup(room.mode, room.bot_count)
 
             keyboard = [
-                [InlineKeyboardButton("👥 Mode Normal", callback_data="mode_normal"),
-                 InlineKeyboardButton("🎲 Mode Random", callback_data="mode_random")],
+                [InlineKeyboardButton("👥 Normal Mode", callback_data="mode_normal"),
+                 InlineKeyboardButton("🎲 Random Mode", callback_data="mode_random")],
                 [InlineKeyboardButton(f"🤖 Bot: {room.bot_count if room else 0}/3", callback_data="add_bot")],
-                [InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")]
+                [InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.edit_text(
-                f"⚙️ Pengaturan Room:\n"
-                f"Pilih mode permainan:",
+                f"⚙️ Room Settings:\n"
+                f"Choose game mode:",
                 reply_markup=reply_markup
             )
 
@@ -657,62 +657,62 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             room = create_room(query.from_user.id, mode, bot_count)
             keyboard = get_room_keyboard(room, query.from_user.id)
             await query.message.edit_text(
-                f"✨ Room berhasil dibuat!\n\n"
+                f"✨ Room successfully created!\n\n"
                 f"🎮 Mode: {mode.title()}\n"
                 f"🤖 Bot: {bot_count}/3\n"
-                f"🔢 ID Room: {room.id}\n"
-                f"👥 Pemain: {len(room.players)}/12\n\n"
-                f"⏳ Menunggu pemain...",
+                f"🔢 Room ID: {room.id}\n"
+                f"👥 Players: {len(room.players)}/12\n\n"
+                f"⏳ Waiting for players...",
                 reply_markup=keyboard
             )
 
         elif query.data == "help":
             help_text = (
-                "🎮 Cara Bermain:\n\n"
-                "1. Buat room atau gabung ke room\n"
-                "2. Pilih mode permainan\n"
-                "3. Tunggu pemain lain bergabung\n"
-                "4. Game dimulai ketika pemain cukup\n\n"
-                "❓ Bantuan lebih lanjut:\n"
-                "/help - Tampilkan bantuan\n"
-                "/rules - Aturan permainan\n"
-                "/roles - Daftar peran\n"
-                "/extend - Tambah waktu pendaftaran 30 detik\n"
-                "/denyroom - Keluar dari room secara paksa\n\n"
+                "🎮 How to Play:\n\n"
+                "1. Create a room or join a room\n"
+                "2. Choose a game mode\n"
+                "3. Wait for other players to join\n"
+                "4. The game starts when enough players have joined\n\n"
+                "❓ For further assistance:\n"
+                "/help - Show help\n"
+                "/rules - Game rules\n"
+                "/roles - List of roles\n"
+                "/extend - Add 30 more seconds to the registration time\n"
+                "/denyroom - Force leave the room\n\n"
                 "💡 Tips:\n"
-                "- Gunakan tombol 'Batalkan Room' untuk membatalkan room\n"
-                "- /denyroom dapat digunakan jika tombol tidak berfungsi"
+                "- Use the 'Cancel Room' button to cancel the room\n"
+                "- /denyroom can be used if the button does not work"
             )
-            keyboard = [[InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")]]
+            keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.edit_text(help_text, reply_markup=reply_markup)
 
         elif query.data == "roles":
-            roles_text = "🎭 Daftar Role dalam Game:\n\n"
+            roles_text = "🎭 List of Roles in the Game:\n\n"
 
             def get_role_name(role_id):
                 role_names = {
-                    "1": "Warga", "2": "Mafia", "3": "Dokter",
-                    "4": "Detektif", "5": "Pengacara", "6": "Kamikaze"
+                    "1": "Townie", "2": "Mafia", "3": "Doctor",
+                    "4": "Detective", "5": "Lawyer", "6": "Kamikaze"
                 }
                 return role_names.get(str(role_id), role_id)
 
             for role, desc in role_desc.items():
                 role_name = get_role_name(role)
                 if role == "Mafia":
-                    roles_text += "🔪 Mafia:\nBertugas membunuh warga setiap malam. Menang jika jumlah mafia = warga.\n\n"
-                elif role == "Warga":
-                    roles_text += "👥 Warga:\nBertugas mengungkap identitas mafia melalui voting.\n\n"
-                elif role == "Dokter":
-                    roles_text += "👨‍⚕️ Dokter:\nDapat melindungi 1 pemain dari serangan mafia setiap malam.\n\n"
-                elif role == "Detektif":
-                    roles_text += "🔍 Detektif:\nDapat memeriksa peran 1 pemain setiap malam.\n\n"
-                elif role == "Pengacara":
-                    roles_text += "⚖️ Pengacara:\nDapat melindungi 1 pemain dari voting eksekusi.\n\n"
+                    roles_text += "🔪 Mafia:\nTasked with killing townspeople every night. Wins if mafia = townspeople.\n\n"
+                elif role == "Townie":
+                    roles_text += "👥 Townie:\nTasked with uncovering the mafia through voting.\n\n"
+                elif role == "Doctor":
+                    roles_text += "👨‍⚕️ Doctor:\nCan protect one player from mafia attacks every night.\n\n"
+                elif role == "Detective":
+                    roles_text += "🔍 Detective:\nCan check one player's role every night.\n\n"
+                elif role == "Lawyer":
+                    roles_text += "⚖️ Lawyer:\nCan protect one player from execution voting.\n\n"
                 else:
                     roles_text += f"{role}:\n{desc}\n\n"
 
-            keyboard = [[InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")]]
+            keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.edit_text(roles_text, reply_markup=reply_markup)
 
@@ -744,19 +744,19 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     user_stats["items"][item_id] += 1
                 else:
                     user_stats["items"][item_id] = 1
-                await query.answer(f"Berhasil membeli {item['name']}!")
+                await query.answer(f"Successfully bought {item['name']}!")
                 points = get_player_points(query.from_user.id)
                 await query.message.edit_text(f"💰 Points: {points}\n\n🛍️ Shop Items:", reply_markup=get_shop_keyboard())
             else:
-                await query.answer("❌ Points tidak cukup!", show_alert=True)
+                await query.answer("❌ Not enough points!", show_alert=True)
 
             # Check achievements
             from achievements import check_achievements
             new_achievements = check_achievements(query.from_user.id)
             if new_achievements:
-                achievement_text = "\n".join([f"🎉 Mendapatkan achievement: {ACHIEVEMENTS[a]['name']}" for a in new_achievements])
+                achievement_text = "\n".join([f"🎉 Earned achievement: {ACHIEVEMENTS[a]['name']}" for a in new_achievements])
                 await query.message.reply_text(achievement_text)
-            await query.answer("Points tidak cukup!", show_alert=True)
+            await query.answer("Not enough points!", show_alert=True)
 
 
         elif query.data.startswith("start_game_"):
@@ -776,7 +776,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 save_database(game_data)
 
         elif query.data == "show_rules":
-            rules_text = """
+            rules_text = """ 
 Game Rules:
 1. The game has two phases: Day and Night
 2. During Night, special roles perform their actions
@@ -789,31 +789,31 @@ Game Rules:
             await query.message.edit_text(rules_text, reply_markup=reply_markup)
 
         elif query.data == "show_roles":
-            roles_text = "🎭 Daftar Role dalam Game:\n\n"
+            roles_text = "🎭 List of Roles in the Game:\n\n"
 
             def get_role_name(role_id):
                 role_names = {
-                    "1": "Warga", "2": "Mafia", "3": "Dokter",
-                    "4": "Detektif", "5": "Pengacara", "6": "Kamikaze"
+                    "1": "Citizen", "2": "Mafia", "3": "Doctor",
+                    "4": "Detective", "5": "Lawyer", "6": "Kamikaze"
                 }
                 return role_names.get(str(role_id), role_id)
 
             for role, desc in role_desc.items():
                 role_name = get_role_name(role)
                 if role == "Mafia":
-                    roles_text += "🔪 Mafia:\nBertugas membunuh warga setiap malam. Menang jika jumlah mafia = warga.\n\n"
-                elif role == "Warga":
-                    roles_text += "👥 Warga:\nBertugas mengungkap identitas mafia melalui voting.\n\n"
-                elif role == "Dokter":
-                    roles_text += "👨‍⚕️ Dokter:\nDapat melindungi 1 pemain dari serangan mafia setiap malam.\n\n"
-                elif role == "Detektif":
-                    roles_text += "🔍 Detektif:\nDapat memeriksa peran 1 pemain setiap malam.\n\n"
-                elif role == "Pengacara":
-                    roles_text += "⚖️ Pengacara:\nDapat melindungi 1 pemain dari voting eksekusi.\n\n"
+                    roles_text += "🔪 Mafia:\nTasked with killing citizens every night. Wins if the number of mafia = citizens.\n\n"
+                elif role == "Citizen":
+                    roles_text += "👥 Citizen:\nTasked with revealing the identity of the mafia through voting.\n\n"
+                elif role == "Doctor":
+                    roles_text += "👨‍⚕️ Doctor:\nCan protect 1 player from mafia attacks each night.\n\n"
+                elif role == "Detective":
+                    roles_text += "🔍 Detective:\nCan investigate 1 player's role each night.\n\n"
+                elif role == "Lawyer":
+                    roles_text += "⚖️ Lawyer:\nCan protect 1 player from execution voting.\n\n"
                 else:
                     roles_text += f"{role}:\n{desc}\n\n"
 
-            keyboard = [[InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")]]
+            keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.edit_text(roles_text, reply_markup=reply_markup)
 
@@ -845,49 +845,49 @@ Game Rules:
                     user_stats["items"][item_id] += 1
                 else:
                     user_stats["items"][item_id] = 1
-                await query.answer(f"Berhasil membeli {item['name']}!")
+                await query.answer(f"Successfully bought {item['name']}!")
                 points = get_player_points(query.from_user.id)
                 await query.message.edit_text(f"💰 Points: {points}\n\n🛍️ Shop Items:", reply_markup=get_shop_keyboard())
             else:
-                await query.answer("❌ Points tidak cukup!", show_alert=True)
+                await query.answer("❌ Not enough points!", show_alert=True)
 
             # Check achievements
             from achievements import check_achievements
             new_achievements = check_achievements(query.from_user.id)
             if new_achievements:
-                achievement_text = "\n".join([f"🎉 Mendapatkan achievement: {ACHIEVEMENTS[a]['name']}" for a in new_achievements])
+                achievement_text = "\n".join([f"🎉 Gained achievement: {ACHIEVEMENTS[a]['name']}" for a in new_achievements])
                 await query.message.reply_text(achievement_text)
             await query.answer("Points tidak cukup!", show_alert=True)
 
         elif query.data == "show_dev_info":
             dev_info = (
-                "🎮 MafiaGame Bot\n\n"
+                "🎮 IBM Mafia Game Bot\n\n"
                 "👨‍💻 Developer:\n"
-                "- @berlinnad\n\n"
+                "- @simpshh\n\n"
                 "🔧 Features:\n"
                 "- Real-time gameplay\n"            "- AI Bots\n"
                 "- Multiple roles\n\n"
                 "🌟 Special Thanks:\n"
                 "- Community supporters\n"
                 "- Beta testers\n\n"
-                "🎨 Art by: @berlinnad\n"
+                "🎨 Art by: @IBMBotSupport\n"
                 "[Insert Promo Image Here]\n\n"
                 "✨ Follow us for updates!\n"
-                "🔗 t.me/mafiaonnadbot"
+                "🔗 t.me/IBMBotSupport"
             )
-            keyboard = [[InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")]]
+            keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.edit_text(dev_info, reply_markup=reply_markup)
 
         elif query.data == "show_stats":
             user_id = str(query.from_user.id)
             stats = game_data.get("player_stats", {}).get(user_id, {"wins": 0, "games": 0})
-            keyboard = [[InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")]]
+            keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.edit_text(
-                f"📊 Statistik Anda:\n\n"
+                f"📊 Your Statistics:\n\n"
                 f"🎮 Total Game: {stats['games']}\n"
-                f"🏆 Menang: {stats['wins']}\n",
+                f"🏆 Wins: {stats['wins']}\n",
                 reply_markup=reply_markup
             )
         elif query.data.startswith("start_game_"):
@@ -920,31 +920,31 @@ Game Rules:
             await query.message.edit_text(rules_text, reply_markup=reply_markup)
 
         elif query.data == "show_roles":
-            roles_text = "🎭 Daftar Role dalam Game:\n\n"
+            roles_text = "🎭 List of Roles in the Game:\n\n"
 
             def get_role_name(role_id):
                 role_names = {
-                    "1": "Warga", "2": "Mafia", "3": "Dokter",
-                    "4": "Detektif", "5": "Pengacara", "6": "Kamikaze"
+                    "1": "Townsperson", "2": "Mafia", "3": "Doctor",
+                    "4": "Detective", "5": "Lawyer", "6": "Kamikaze"
                 }
                 return role_names.get(str(role_id), role_id)
 
             for role, desc in role_desc.items():
                 role_name = get_role_name(role)
                 if role == "Mafia":
-                    roles_text += "🔪 Mafia:\nBertugas membunuh warga setiap malam. Menang jika jumlah mafia = warga.\n\n"
-                elif role == "Warga":
-                    roles_text += "👥 Warga:\nBertugas mengungkap identitas mafia melalui voting.\n\n"
-                elif role == "Dokter":
-                    roles_text += "👨‍⚕️ Dokter:\nDapat melindungi 1 pemain dari serangan mafia setiap malam.\n\n"
-                elif role == "Detektif":
-                    roles_text += "🔍 Detektif:\nDapat memeriksa peran 1 pemain setiap malam.\n\n"
-                elif role == "Pengacara":
-                    roles_text += "⚖️ Pengacara:\nDapat melindungi 1 pemain dari voting eksekusi.\n\n"
+                    roles_text += "🔪 Mafia:\n Tasks to kill townspeople every night. Wins if the number of mafia = townspeople.\n\n"
+                elif role == "Townsperson":
+                    roles_text += "👥 Townsperson:\n Tasks to reveal the mafia's identity through voting.\n\n"
+                elif role == "Docter":
+                    roles_text += "👨‍⚕️ Docter:\n Can protect 1 player from a mafia attack every night.\n\n"
+                elif role == "Detective":
+                    roles_text += "🔍 Detective:\n Can check the role of 1 player every night.\n\n"
+                elif role == "Lawyer":
+                    roles_text += "⚖️ Lawyer:\n Can protect 1 player from execution voting.\n\n"
                 else:
                     roles_text += f"{role}:\n{desc}\n\n"
 
-            keyboard = [[InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")]]
+            keyboard = [[InlineKeyboardButton("⬅️ Back", callback_data="main_menu")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await query.message.edit_text(roles_text, reply_markup=reply_markup)
 
@@ -980,15 +980,15 @@ Game Rules:
                 points = get_player_points(query.from_user.id)
                 await query.message.edit_text(f"💰 Points: {points}\n\n🛍️ Shop Items:", reply_markup=get_shop_keyboard())
             else:
-                await query.answer("❌ Points tidak cukup!", show_alert=True)
+                await query.answer("❌ Insufficient points!", show_alert=True)
 
             # Check achievements
             from achievements import check_achievements
             new_achievements = check_achievements(query.from_user.id)
             if new_achievements:
-                achievement_text = "\n".join([f"🎉 Mendapatkan achievement: {ACHIEVEMENTS[a]['name']}" for a in new_achievements])
+                achievement_text = "\n".join([f"🎉 Earned achievement: {ACHIEVEMENTS[a]['name']}" for a in new_achievements])
                 await query.message.reply_text(achievement_text)
-            await query.answer("Points tidak cukup!", show_alert=True)
+            await query.answer("Points not enough!", show_alert=True)
         else:
             await command_handler.execute_command(query.data, update, context)
     except Exception as e:
@@ -1015,8 +1015,8 @@ async def handle_room_timer(room, message, context):
             if int(time_left) in reminder_times:
                 await context.bot.send_message(
                     chat_id=room.chat_id,
-                    text=f"⏰ {int(time_left)} detik tersisa!\n"
-                         f"👥 Total Pemain: {len(room.players)}"
+                    text=f"⏰ {int(time_left)} seconds remaining!\n"
+                         f"👥 Total Players: {len(room.players)}"
                 )
                 reminder_times.remove(int(time_left))
 
@@ -1028,41 +1028,41 @@ async def handle_room_timer(room, message, context):
                 else:
                     player_list.append(f"👤 @{p['name']}")
 
-            # Update room message
-            keyboard = await get_room_keyboard(room, None)  # Pass None to avoid join button for existing players
-            try:
-                await message.edit_text(
-                    f"✨ Room berhasil dibuat!\n\n"
-                    f"🎮 Mode: {room.mode.title()}\n"
-                    f"🔢 ID Room: {room.id}\n"
-                    f"👥 Total Pemain: {len(room.players)}\n"
-                    f"{chr(10).join(player_list)}\n\n"
-                    f"⏳ Waktu tersisa: {int(time_left)} detik",
-                    reply_markup=keyboard
-                )
-            except Exception as e:
-                print(f"Error updating message: {e}")
+# Update room message
+keyboard = await get_room_keyboard(room, None)  # Pass None to avoid join button for existing players
+try:
+    await message.edit_text(
+        f"✨ Room successfully created!\n\n"
+        f"🎮 Mode: {room.mode.title()}\n"
+        f"🔢 Room ID: {room.id}\n"
+        f"👥 Total Players: {len(room.players)}\n"
+        f"{chr(10).join(player_list)}\n\n"
+        f"⏳ Time remaining: {int(time_left)} seconds",
+        reply_markup=keyboard
+    )
+except Exception as e:
+    print(f"Error updating message: {e}")
 
-            # Check if timer ended
-            if time_left <= 0:
-                total_players = len(room.players)
+# Check if timer ended
+if time_left <= 0:
+    total_players = len(room.players)
 
-                # Start game if at least 4 players (including bots)
-                if total_players >= 4:
-                    room.is_joining = False
-                    await start_game(room, context)
-                else:
-                    await context.bot.send_message(
-                        chat_id=room.chat_id,
-                        text=f"❌ Room dibatalkan karena kurang pemain\n"
-                             f"Minimal 4 pemain (termasuk bot)\n"
-                             f"Total pemain: {total_players}"
-                    )
-                break
+    # Start game if at least 4 players (including bots)
+    if total_players >= 4:
+        room.is_joining = False
+        await start_game(room, context)
+    else:
+        await context.bot.send_message(
+            chat_id=room.chat_id,
+            text=f"❌ Room cancelled due to insufficient players\n"
+                 f"Minimum 4 players (including bots)\n"
+                 f"Total players: {total_players}"
+        )
+    break
 
-            await asyncio.sleep(1)
-    except Exception as e:
-        print(f"Error in handle_room_timer: {e}")
+await asyncio.sleep(1)
+except Exception as e:
+    print(f"Error in handle_room_timer: {e}")
 
 
 async def get_room_keyboard(room, user_id):
@@ -1098,15 +1098,15 @@ async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         room = get_room_by_player(update.effective_user.id)
         if not room:
-            await update.message.reply_text("❌ Room tidak ditemukan!")
+            await update.message.reply_text("❌ Room not found!")
             return
 
         if room.creator_id != update.effective_user.id:
-            await update.message.reply_text("❌ Hanya pembuat room yang dapat memulai permainan!")
+            await update.message.reply_text("❌ Only the room creator can start the game!")
             return
 
         if len(room.players) < 4:
-            await update.message.reply_text("❌ Minimal 4 pemain untuk memulai permainan!")
+            await update.message.reply_text("❌ Minimum 4 players required to start the game!")
             return
 
         # Initialize game state
@@ -1128,7 +1128,7 @@ async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 try:
                     await context.bot.send_message(
                         chat_id=player_id,
-                        text=f"🎭 Peran kamu: {role}\n\n📜 Deskripsi:\n{role_desc.get(role, 'Peran rahasia')}"
+                        text=f"🎭 Your role: {role}\n\n📜 Description:\n{role_desc.get(role, 'Secret role')}"
                     )
                     player_mentions.append(f"@{player['name']}")
                 except Exception as e:
@@ -1136,10 +1136,10 @@ async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         # Start game announcement
         announcement = (
-            f"🎮 Permainan dimulai!\n\n"
-            f"👥 Pemain({len(room.players)}):\n"
+            f"🎮 Game started!\n\n"
+            f"👥 Players({len(room.players)}):\n"
             f"{', '.join(player_mentions)}\n\n"
-            f"📱 Cek PM untuk info peran"
+            f"📱 Check your PM for role details"
         )
 
         await update.message.reply_text(announcement)
@@ -1150,7 +1150,7 @@ async def start_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     except Exception as e:
         print(f"Error starting game: {e}")
-        await update.message.reply_text("❌ Terjadi kesalahan saat memulai permainan!")
+        await update.message.reply_text("❌ An error occurred while starting the game!")
 
 async def assign_roles(players, mode):
     available_roles = list(role_desc.keys())
