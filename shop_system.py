@@ -8,21 +8,21 @@ SHOP_ITEMS = {
         "name": "🛡️ Protection",
         "price": 1000,
         "icon": "🛡️",
-        "description": "Lindungi diri dari serangan malam"
+        "description": "Protect yourself from the night attack."
     },
     "fake_id": {
         "id": 2,
         "name": "📄 Fake ID", 
         "price": 800,
         "icon": "📄",
-        "description": "Sembunyikan identitasmu"
+        "description": "Hide your identity."
     },
     "double_vote": {
         "id": 3,
         "name": "✌️ Double Vote",
         "price": 1200,
         "icon": "✌️", 
-        "description": "Vote bernilai 2x"
+        "description": "Vote is worth 2x."
     },
     "gems": {
         "id": 4,
@@ -36,7 +36,7 @@ SHOP_ITEMS = {
         "name": "🔮 Revival",
         "price": 2500,
         "icon": "🔮",
-        "description": "Hidup kembali"
+        "description": "Revive"
     }
 }
 
@@ -51,7 +51,7 @@ def get_shop_keyboard():
                 callback_data=f"buy_{item_id}"
             )
         ])
-    keyboard.append([InlineKeyboardButton("⬅️ Kembali", callback_data="main_menu")])
+    keyboard.append([InlineKeyboardButton("⬅️ Back", callback_data="main_menu")])
     return InlineKeyboardMarkup(keyboard)
 
 def get_player_stats(player_id):
