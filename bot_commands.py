@@ -1028,37 +1028,37 @@ async def handle_room_timer(room, message, context):
                 else:
                     player_list.append(f"👤 @{p['name']}")
 
-# Update room message
-keyboard = await get_room_keyboard(room, None)  # Pass None to avoid join button for existing players
-try:
-    await message.edit_text(
-        f"✨ Room successfully created!\n\n"
-        f"🎮 Mode: {room.mode.title()}\n"
-        f"🔢 Room ID: {room.id}\n"
-        f"👥 Total Players: {len(room.players)}\n"
-        f"{chr(10).join(player_list)}\n\n"
-        f"⏳ Time remaining: {int(time_left)} seconds",
-        reply_markup=keyboard
-    )
-except Exception as e:
-    print(f"Error updating message: {e}")
+            # Update room message
+            keyboard = await get_room_keyboard(room, None)  # Pass None to avoid join button for existing players
+            try:
+                await message.edit_text(
+                    f"✨ Room successfully created!\n\n"
+                    f"🎮 Mode: {room.mode.title()}\n"
+                    f"🔢 Room ID: {room.id}\n"
+                    f"👥 Total Players: {len(room.players)}\n"
+                    f"{chr(10).join(player_list)}\n\n"
+                    f"⏳ Time left: {int(time_left)} seconds",
+                    reply_markup=keyboard
+                )
+            except Exception as e:
+                print(f"Error updating message: {e}")
 
-# Check if timer ended
-if time_left <= 0:
-    total_players = len(room.players)
+            # Check if timer ended
+            if time_left <= 0:
+                total_players = len(room.players)
 
-    # Start game if at least 4 players (including bots)
-    if total_players >= 4:
-        room.is_joining = False
-        await start_game(room, context)
-    else:
-        await context.bot.send_message(
-            chat_id=room.chat_id,
-            text=f"❌ Room cancelled due to insufficient players\n"
-                 f"Minimum 4 players (including bots)\n"
-                 f"Total players: {total_players}"
-        )
-    break
+                # Start game if at least 4 players (including bots)
+                if total_players >= 4:
+                    room.is_joining = False
+                    await start_game(room, context)
+                else:
+                    await context.bot.send_message(
+                        chat_id=room.chat_id,
+                        text=f"❌ Room canceled due to insufficient players\n"
+                             f"Minimum 4 players (including bots)\n"
+                             f"Total players: {total_players}"
+                    )
+                break
 
 await asyncio.sleep(1)
 except Exception as e:
