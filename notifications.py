@@ -7,7 +7,7 @@ async def send_join_notification(context, chat_id, player_name):
     try:
         await context.bot.send_message(
             chat_id=chat_id,
-            text=f"✅ @{player_name} telah bergabung ke room!",
+            text=f"✅ @{player_name} Has joined the room!",
             parse_mode='HTML'
         )
     except Exception as e:
@@ -16,8 +16,8 @@ async def send_join_notification(context, chat_id, player_name):
 async def send_timer_notification(context, chat_id, time_left, player_count, mode, room_id):
     """Send timer notification"""
     text = (
-        f"⏰ Sisa waktu: {time_left} Detik\n"
-        f"👥 Pemain: {player_count}\n"
+        f"⏰ Time remaining: {time_left} Detik\n"
+        f"👥 Player: {player_count}\n"
         f"🎮 Mode: {mode}\n"
         f"🔢 ID Room: {room_id}"
     )
@@ -36,7 +36,7 @@ async def send_game_start_notification(context, chat_id):
         await context.bot.send_animation(
             chat_id=chat_id,
             animation=GAME_GIFS["start"],
-            caption="🎮 Game dimulai!\n\nPara pemain akan menerima peran melalui PM..."
+            caption="🎮 The game has started.!\n\nPlayers will receive their roles via PM...."
         )
     except Exception as e:
         print(f"Error sending game start notification: {e}")
@@ -46,7 +46,7 @@ async def send_extend_notification(context, chat_id, seconds):
     try:
         await context.bot.send_message(
             chat_id=chat_id,
-            text=f"⌛ Waktu pendaftaran ditambah {seconds} detik!"
+            text=f"⌛ Registration time extended. {seconds} Seconds!"
         )
     except Exception as e:
         print(f"Error sending extend notification: {e}")
