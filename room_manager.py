@@ -24,7 +24,7 @@ class Room:
 
     def add_player(self, user_id, username, is_bot=False, is_admin=False):
         if any(p["id"] == user_id for p in self.players):
-            return False, "⚠️ Sudah bergabung!"
+            return False, "⚠️ Already joined!"
 
         self.players.append({
             "id": user_id,
@@ -34,7 +34,7 @@ class Room:
             "is_alive": True,
             "is_admin": is_admin
         })
-        return True, "✅ Berhasil bergabung!"
+        return True, "✅ Successfully joined!"
 
     def remove_player(self, user_id):
         self.players = [p for p in self.players if p["id"] != user_id]
@@ -167,8 +167,8 @@ def handle_room_leave(room, player_id):
     if len(real_players) == 0:
         if room.id in active_rooms:
             del active_rooms[room.id]
-        return True, "🚫 Room dihapus karena hanya berisi bot."
-    return False, "✅ Berhasil keluar dari room."
+        return True, "🚫 The room has been deleted because it only contained bots."
+    return False, "✅ Successfully left the room."
 
 async def handle_room_timer(room, message, context):
     try:
@@ -201,9 +201,9 @@ async def handle_room_timer(room, message, context):
                 try:
                     await message.edit_text(
                         f"📢 Room #{room.id}\n\n"
-                        f"👥 Pemain ({len(room.players)}):\n"
+                        f"👥 Player ({len(room.players)}):\n"
                         f"{chr(10).join(player_list)}\n\n"
-                        f"⏳ {int(time_left)} detik tersisa",
+                        f"⏳ {int(time_left)} Seconds remaining",
                         reply_markup=reply_markup
                     )
                     last_update = current_time
@@ -216,8 +216,8 @@ async def handle_room_timer(room, message, context):
                 try:
                     await context.bot.send_message(
                         chat_id=room.chat_id,
-                        text=f"⏰ {int(time_left)} detik tersisa!\n"
-                             f"👥 Total Pemain: {len(room.players)}"
+                        text=f"⏰ {int(time_left)} Seconds remaining!\n"
+                             f"👥 Total Players: {len(room.players)}"
                     )
                     reminder_times.remove(int(time_left))
                 except Exception as e:
@@ -235,17 +235,17 @@ async def handle_room_timer(room, message, context):
                     await start_game(room, context)
                     await context.bot.send_message(
                         chat_id=room.chat_id,
-                        text="🎮 Game akan dimulai! Cek PM untuk info peran."
+                        text="🎮 The game will begin! Check your PM for role information."
                     )
                 else:
                     await context.bot.send_message(
                         chat_id=room.chat_id,
-                        text=f"❌ Room dibatalkan karena kurang pemain\n"
-                             f"Minimal 4 pemain (termasuk bot)\n"
-                             f"Total pemain: {total_players}\n\n"
-                             f"Silakan buat room baru untuk bermain.",
+                        text=f"❌ Room cancelled due to insufficient players.\n"
+                             f"Minimum 4 players (including bots)\n"
+                             f"Total players: {total_players}\n\n"
+                             f"Please create a new room to play.",
                         reply_markup=InlineKeyboardMarkup([[
-                            InlineKeyboardButton("🎮 Buat Room Baru", callback_data="create_room")
+                            InlineKeyboardButton("🎮 Create a New Room", callback_data="create_room")
                         ]])
                     )
                     # Cleanup room
@@ -277,7 +277,7 @@ async def handle_query(update, context):
                 await query.message.edit_text("Game Started!")
         except Exception as e:
             print(f"Error starting game: {e}")
-            await query.answer("❌ Gagal memulai game!", show_alert=True)
+            await query.answer("❌ Failed to start the game!", show_alert=True)
 
     elif query.data.startswith("join_room_"):
         try:
@@ -294,7 +294,7 @@ async def handle_query(update, context):
 
         except Exception as e:
             print(f"Error joining room: {e}")
-            await query.answer("❌ Gagal bergabung ke room!", show_alert=True)
+            await query.answer("❌ Failed to join the room!", show_alert=True)
 
 
     elif query.data.startswith("leave_room_"):
@@ -310,7 +310,7 @@ async def handle_query(update, context):
                 await query.message.edit_text(message)
         except Exception as e:
             print(f"Error leaving room: {e}")
-            await query.answer("❌ Gagal keluar dari room!", show_alert=True)
+            await query.answer("❌ Failed to leave the room!", show_alert=True)
 
     elif query.data.startswith("cancel_room_"):
         try:
@@ -319,7 +319,7 @@ async def handle_query(update, context):
             if room:
                 if room.id in active_rooms:
                     del active_rooms[room.id]
-                await query.message.edit_text("Room dibatalkan!")
+                await query.message.edit_text("The room has been cancelled!")
         except Exception as e:
             print(f"Error cancelling room: {e}")
-            await query.answer("❌ Gagal membatalkan room!", show_alert=True)
+            await query.answer("❌ Failed to cancel the room!", show_alert=True)
