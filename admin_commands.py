@@ -14,7 +14,7 @@ async def handle_berlin_command(update, context):
     user_id = update.effective_user.id
 
     if user_id != ADMIN_ID:
-        await update.message.reply_text("❌ Command khusus admin!")
+        await update.message.reply_text("❌ This command is for admins only!")
         return
 
     # Add unlimited money
@@ -34,7 +34,7 @@ async def handle_admin_command(update: Update, context: ContextTypes.DEFAULT_TYP
         try:
             target_id = int(update.message.text.split()[1])
             amount = int(update.message.text.split()[2])
-            add_player_money(target_id, amount) #Use database function
+            add_player_money(target_id, amount) # Use database function
             await update.message.reply_text(f"Added {amount} coins to player {target_id}")
         except:
             await update.message.reply_text("Usage: /addmoney [player_id] [amount]")
