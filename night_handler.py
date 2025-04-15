@@ -15,12 +15,12 @@ class NightHandler:
             # Notify all players
             await context.bot.send_message(
                 chat_id=room.chat_id,
-                text="🌙 Malam hari tiba... Para pemain dengan peran spesial silakan cek PM!"
+                text="🌙 Night has arrived... Players with special roles, please check your PM!"
             )
             
             # Handle special role actions
             for player in room.get_alive_players():
-                if player["role"] in ["Boss Mafia", "Mafia", "Detektif", "Dokter"]:
+                if player["role"] in ["Boss Mafia", "Mafia", "Detective", "Docter"]:
                     if player.get("is_bot"):
                         # Handle bot night actions
                         action = await self.ai_handler.get_night_action(player, room.get_alive_players())
@@ -44,10 +44,10 @@ class NightHandler:
     async def send_night_action_prompt(self, player, room, context):
         """Send appropriate action prompt based on role"""
         role_prompts = {
-            "Boss Mafia": "🔪 Pilih target untuk dibunuh:",
-            "Mafia": "🔪 Ikuti instruksi Boss Mafia",
-            "Detektif": "🔍 Pilih pemain untuk diselidiki:",
-            "Dokter": "💉 Pilih pemain untuk dilindungi:"
+            "Boss Mafia": "🔪 Choose a target to kill:",
+            "Mafia": "🔪 Follow the instructions of the Boss Mafia",
+            "Detektif": "🔍 Choose a player to investigate:",
+            "Dokter": "💉 Choose a player to protect:"
         }
         
         if player["role"] in role_prompts:
