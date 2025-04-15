@@ -7,10 +7,10 @@ Copyright (c) 2024 Berlinnad. All rights reserved.
 from database import get_temp_game_data, save_temp_game_data, get_user_stats
 
 # Game info
-GAME_NAME = "MafiosoNnad"
-GAME_CREATOR = "Created by Berlinnad"
+GAME_NAME = "IBM's Mafia Game Bot"
+GAME_CREATOR = "Created by @IBMBotSupport"
 GAME_VERSION = "v1.0.0"
-ADMIN_ID = 5136750253
+ADMIN_ID = 2125687935
 
 # Game assets 
 GAME_GIFS = {
@@ -24,26 +24,26 @@ GAME_GIFS = {
 BOT_NAMES = ["BenNnadBot", "BenedictNnad", "BeniNnad", "BerlianoNnad", "NnadBot"]
 
 # Game modes
-NORMAL_MODE_ROLES = ["Warga", "Mafia", "Dokter", "Detektif"]
-RANDOM_MODE_ROLES = NORMAL_MODE_ROLES + ["Kamikaze", "Lucky", "Pesulap", "Penyihir"]
+NORMAL_MODE_ROLES = ["Villager", "Mafia", "Doctor", "Detective"]
+RANDOM_MODE_ROLES = NORMAL_MODE_ROLES + ["Kamikaze", "Lucky", "Magician", "Sorcerer"]
 
 # Role descriptions
 role_desc = {
-    "Warga": "👨🏼 Warga biasa tanpa kemampuan khusus. Tugas: Mencari dan mengungkap mafia melalui diskusi dan voting.",
-    "Mafia": "🔪 Mafia pembunuh. Tugas: Membunuh warga tiap malam dan menyembunyikan identitas.",
-    "Dokter": "👨‍⚕️ Dokter penyembuh. Tugas: Melindungi satu pemain dari serangan mafia tiap malam.",
-    "Detektif": "🕵️ Detektif cerdas. Tugas: Menyelidiki identitas satu pemain tiap malam.",
+    "Villager": "👨🏼 A regular villager with no special abilities. Task: Find and expose the mafia through discussion and voting",
+    "Mafia": "🔪 A mafia killer. Task: Kill villagers each night and hide your identity.",
+    "Doctor": "👨‍⚕️ A healing doctor. Task: Protect one player from the mafia's attack each night.",
+    "Detective": "🕵️ A clever detective. Task: Investigate the identity of one player each night.",
     # Add all other roles here from your list
-    "Boss Mafia": "👑 Kamu adalah Bos Mafia! Pimpin mafiamu dan taklukkan warga.",
-    "Pengacara": "⚖️ Kamu adalah Pengacara! Selamatkan pemain yang dipilih setiap malam.",
-    "Beruntung": "🤞🏼 Kamu adalah Si Beruntung! Vote pertama memiliki pengaruh besar.",
-    "Kamikaze": "💣 Kamu adalah Kamikaze! Jangan bicara, tapi saat dibunuh kamu bisa membawa musuhmu mati bersamamu.",
-    "Pelacur": "💋 Kamu adalah Pelacur! Dapat mengetahui peran pemain yang dipilih setiap malam.",
-    "Gelandangan": "🚶 Kamu adalah Gelandangan! Tidak memiliki peran khusus, hanya warga biasa.",
-    "Walikota": "🏙️ Kamu adalah Walikota! Kamu kebal terhadap vote.",
-    "Serigala": "🐺 Kamu adalah Serigala! Bunuh siapapun yang kamu mau.",
-    "Pesulap": "✨ Kamu adalah Pesulap! Tukar peran dengan pemain lain.",
-    "Gila": "🤪 Kamu adalah Gila! Kamu dapat memilih untuk membunuh siapapun atau menyembuhkan siapapun."
+    "Boss Mafia": "👑 You are the Mafia Boss! Lead your mafia and conquer the villagers.",
+    "Lawyer": "⚖️ You are the Lawyer! Save a chosen player every night.",
+    "Lucky": "🤞🏼 You are the Lucky One! Your first vote has a big impact.",
+    "Kamikaze": "💣 You are the Kamikaze! Stay silent, but if you're killed, you can take your killer down with you.",
+    "Prostitute": "💋 You are the Prostitute! You can learn the role of one chosen player each night.",
+    "Hobo": "🚶 You are the Hobo! No special role, just a regular villager",
+    "Mayor": "🏙️ You are the Mayor! You are immune to voting.",
+    "Werewolf": "🐺 You are the Werewolf! Kill anyone you want.",
+    "Magician": "✨ You are the Magician! Swap roles with another player.",
+    "Madman": "🤪 You are the Madman! You can choose to either kill or heal anyone."
 }
 
 # Game state management
@@ -72,9 +72,9 @@ game_data = {
     "player_stats": {},  # For achievements and stats
     "active_rooms": {},
     "shop_items": {
-        "protection": {"price": 100, "desc": "Satu kali perlindungan dari serangan"},
-        "extra_vote": {"price": 200, "desc": "Tambahan satu suara saat voting"},
-        "role_peek": {"price": 300, "desc": "Lihat peran satu pemain"}
+        "protection": {"price": 100, "desc": "**One time protection from an attack**"},
+        "extra_vote": {"price": 200, "desc": "**Additional one vote during voting**"},
+        "role_peek": {"price": 300, "desc": "**See the role of one player**"}
     }
 }
 
