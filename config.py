@@ -10,4 +10,4 @@ To use this bot:
 ENCRYPTION_KEY = "909090"
 
 # Bot token (replace with your token)
-BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
+BOT_TOKEN = "7879566288:AAHq5EEOCGjmmaDHIrY4XkLkdMHZUvnVNFM"
