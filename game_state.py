@@ -21,7 +21,7 @@ GAME_GIFS = {
 }
 
 # Bot names
-BOT_NAMES = ["BenNnadBot", "BenedictNnad", "BeniNnad", "BerlianoNnad", "NnadBot"]
+BOT_NAMES = ["BenNnadBot", "BenedictNnad", "BeniNnad", "BerlianoNnad", "NnadBot", "IBMMAFIABOT"]
 
 # Game modes
 NORMAL_MODE_ROLES = ["Villager", "Mafia", "Doctor", "Detective"]
