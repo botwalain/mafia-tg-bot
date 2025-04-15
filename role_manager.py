@@ -18,10 +18,10 @@ class RoleManager:
     def _initialize_roles(self) -> Dict[str, Role]:
         roles = {}
         # Add all roles with their properties
-        roles["Warga"] = Role(
-            name="Warga",
-            team="Baik",
-            description="👨🏼 Warga biasa tanpa kemampuan khusus",
+        roles["Villager"] = Role(
+            name="Villager",
+            team="Good",
+            description="👨🏼 A regular villager with no special abilities.",
             night_action=False,
             special_action=False
         )
