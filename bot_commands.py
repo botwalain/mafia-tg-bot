@@ -1060,9 +1060,9 @@ async def handle_room_timer(room, message, context):
                     )
                 break
 
-await asyncio.sleep(1)
-except Exception as e:
-    print(f"Error in handle_room_timer: {e}")
+            await asyncio.sleep(1)
+    except Exception as e:
+        print(f"Error in handle_room_timer: {e}")
 
 
 async def get_room_keyboard(room, user_id):
