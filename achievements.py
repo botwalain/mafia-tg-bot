@@ -3,28 +3,28 @@ ACHIEVEMENTS = {
     1: {
         "id": "first_win",
         "name": "🏆 First Victory",
-        "description": "Menang pertama kali",
+        "description": "First win",
         "reward": 200
     },
     2: {
         "id": "mafia_master", 
         "name": "🔪 Mafia Master",
-        "description": "Menang 5 kali sebagai Mafia",
+        "description": "Win 5 times as Mafia",
         "reward": 500
     },
     "detective_pro": {
         "name": "🔎 Detective Pro",
-        "description": "Berhasil menangkap 3 Mafia",
+        "description": "Successfully capture 3 Mafia",
         "reward": 2000
     },
     "rich_player": {
         "name": "💰 Rich Player",
-        "description": "Mengumpulkan 10000 coins",
+        "description": "Collect 10000 coins",
         "reward": 5000
     },
     "collector": {
         "name": "🎭 Collector",
-        "description": "Memiliki 5 item berbeda",
+        "description": "Own 5 different items",
         "reward": 3000
     }
 }
