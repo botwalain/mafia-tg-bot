@@ -14,12 +14,12 @@ class NightHandler:
             # Notify all players
             await context.bot.send_message(
                 chat_id=room.chat_id,
-                text="🌙 Malam hari tiba... Para pemain dengan peran spesial silakan cek PM!"
+                text="🌙 The night has arrived... Players with special roles, please check your PM!"
             )
             
             # Handle special role actions
             for player in room.get_alive_players():
-                if player["role"] in ["Boss Mafia", "Mafia", "Detektif", "Dokter"]:
+                if player["role"] in ["Boss Mafia", "Mafia", "Detective", "Doctor"]:
                     if player.get("is_bot"):
                         # Handle bot night actions
                         action = await self.ai_handler.get_night_action(player, room.get_alive_players())
@@ -43,10 +43,10 @@ class NightHandler:
     async def send_night_action_prompt(self, player, room, context):
         """Send appropriate action prompt based on role"""
         role_prompts = {
-            "Boss Mafia": "🔪 Pilih target untuk dibunuh:",
-            "Mafia": "🔪 Ikuti instruksi Boss Mafia",
-            "Detektif": "🔍 Pilih pemain untuk diselidiki:",
-            "Dokter": "💉 Pilih pemain untuk dilindungi:"
+            "Boss Mafia": "🔪 Choose a target to kill:",
+            "Mafia": "🔪 Follow the instructions of the Boss Mafia",
+            "Detective": "🔍 Choose a player to investigate:",
+            "Doctor": "💉 Choose a player to protect:"
         }
         
         if player["role"] in role_prompts:
@@ -71,7 +71,7 @@ class VotingHandler:
             # Notify all players
             await context.bot.send_message(
                 chat_id=room.chat_id,
-                text="🗳️ Waktu voting dimulai! Silakan pilih pemain yang mencurigakan."
+                text="🗳️The voting time has started! Please choose the suspicious player."
             )
 
             # Handle voting actions
@@ -99,7 +99,7 @@ class VotingHandler:
     async def send_voting_prompt(self, player, room, context):
         # Add voting prompt logic
         alive_players = room.get_alive_players()
-        voting_text = "🗳️ Pilih pemain untuk di-vote:\n\n"
+        voting_text = "🗳️ Choose a player to vote.:\n\n"
         for i, p in enumerate(alive_players, 1):
             if p["id"] != player["id"]:
                 voting_text += f"{i}. {p['name']}\n"
@@ -113,7 +113,7 @@ class VotingHandler:
         if not room.votes:
             await context.bot.send_message(
                 chat_id=room.chat_id,
-                text="❌ Tidak ada yang di-vote hari ini."
+                text="❌ No one has been voted today."
             )
             return
 
@@ -129,7 +129,7 @@ class VotingHandler:
         # Announce result
         await context.bot.send_message(
             chat_id=room.chat_id,
-            text=f"🔨 {most_voted_player['name']} telah di-vote keluar!"
+            text=f"🔨 {most_voted_player['name']} Has been voted out!"
         )
 
         # Update player state
